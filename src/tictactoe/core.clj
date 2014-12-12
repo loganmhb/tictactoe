@@ -66,7 +66,7 @@
   [player-side]
   (loop [game (new-game)]
     (cond (winner game) (println "Winner is " (contents->str (winner game)))
-          (empty? (legal-moves game)) (println "The game is a draw.")x
+          (empty? (legal-moves game)) (println "The game is a draw.")
           (= (:to-move game) player-side)
            (recur (make-move game (prompt-move game))) ; get move from user
           :else (recur (make-move game (best-move game)))))) ; get move from computer
