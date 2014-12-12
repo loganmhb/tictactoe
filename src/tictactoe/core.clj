@@ -30,15 +30,15 @@
 (defn print-row
   [row]
   (let [r (map contents->str row)]
-    (println (first r) "|" (second r) "|" (last r))))
+    (str " " (first r) " | " (second r) " | " (last r) " ")))
 
 (defn print-game
   [game]
   (let [rows (map print-row (:board game))]
     (println (first rows))
-    (println (str (repeat 9 "-")))
+    (println "-----------")
     (println (second rows))
-    (println (str (repeat 9 "-")))
+    (println "-----------")
     (println (last rows))))
 
 (defn str->move
@@ -50,7 +50,7 @@
   "Get player move from stdin."
   [game]
   (print-game game)
-  (println "Please enter a move in the form 'x y' (x and y being 0-2):")
+  (println "Please enter a move in the form 'row column' (row and col being 0-2):")
   (loop [move-string (read-line)]
     (if (re-matches #"[0-2] [0-2]" move-string)
       (let [move (str->move move-string)]
@@ -65,11 +65,14 @@
   "Play the game against the computer as the given side (should be keyword :x or :o)."
   [player-side]
   (loop [game (new-game)]
-    (cond (winner game) (println "Winner is " (contents->str (winner game)))
-          (empty? (legal-moves game)) (println "The game is a draw.")
-          (= (:to-move game) player-side)
-           (recur (make-move game (prompt-move game))) ; get move from user
-          :else (recur (make-move game (best-move game)))))) ; get move from computer
+    (cond (winner game) (do (print-game game)
+                            (println "Winner is " (contents->str (winner game))))
+          (empty? (legal-moves game)) (do (print-game game)
+                                          (println "The game is a draw."))
+          ;; Get move from human if it is their turn.
+          (= (:to-move game) player-side) (recur (make-move game (prompt-move game)))
+          ;; Otherwise, let the computer pick the best move.
+          :else (recur (make-move game (best-move game))))))
 
 (defn -main
   "CLI interface for playing Tic Tac Toe."
