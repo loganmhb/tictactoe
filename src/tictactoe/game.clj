@@ -49,7 +49,7 @@
   (let [rows (concat (:board game) ; rows
                      (for [x [0 1 2]] (map #(get % x) (:board game))) ; columns
                      ;; Ugly code to get the diagonals
-                     (list (vec (map #((get (:board game) %) %) [0 1 2])))
-                     (list (vec (map #((get (vec (reverse (:board game))) %) %) [2 1 0]))))]
+                     (list (mapv #((get (:board game) %) %) [0 1 2])
+                           (mapv #((get (vec (reverse (:board game))) %) %) [2 1 0])))]
     ;; Look for a non-nil value (assumes two players can't get three in a row)
     (first (filter identity (map three-in-a-row? rows)))))

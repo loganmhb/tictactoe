@@ -103,7 +103,7 @@
   "Return the best move the computer can find, using Newell & Simon's rules
    to guarantee perfect play."
   [game]
-  (some #(% game) [win
+  (some #(% game) [winning-move
                    block-win
                    find-fork
                    block-fork

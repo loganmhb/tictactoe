@@ -24,10 +24,10 @@
 
 (deftest heuristic-tests
   (testing "Individual move-attemption functions."
-    (is (win {:board [[:x :x :e]
-                      [:e :o :o]
-                      [:e :e :e]]
-              :to-move :x}) [0 2])
+    (is (winning-move {:board [[:x :x :e]
+                               [:e :o :o]
+                               [:e :e :e]]
+                       :to-move :x}) [0 2])
     (is (block-win {:board [[:x :x :e]
                             [:e :o :e]
                             [:e :e :e]]
