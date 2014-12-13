@@ -24,7 +24,7 @@ No command line options yet.
 
 ### Bugs
 
-Incomplete test coverage. Is it really unbeatabe?
+There are tests but the coverage leaves something to be desired because I don't really know how to write tests. 
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
