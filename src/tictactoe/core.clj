@@ -54,7 +54,7 @@
   (loop [move-string (read-line)]
     (if (re-matches #"[0-2] [0-2]" move-string)
       (let [move (str->move move-string)]
-        (if (filter #(= % move) (legal-moves game))
+        (if ((set (legal-moves game)) move)
           move
           (do (println "Invalid move. Square is occupied. Please try again.")
               (recur (read-line)))))
