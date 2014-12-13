@@ -9,8 +9,9 @@ To run with Leiningen, clone the repository and run:
     cd tictactoe
     lein run
 
-If you don't want to use lein, run the uberjar:
+If you don't want to use lein every time, run the uberjar:
 
+    lein uberjar
     java -jar target/uberjar/tictactoe-0.1.0-standalone.jar
 
 ## Usage
