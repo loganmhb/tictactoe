@@ -1,6 +1,7 @@
 (ns tictactoe.core-test
   (:require [clojure.test :refer :all]
-            [tictactoe.core :refer :all]))
+            [tictactoe.core :refer :all]
+            [tictactoe.game :refer [make-move new-game legal-moves]]))
 
 (deftest move-making
   (testing "Move-making."
@@ -15,9 +16,3 @@
 (deftest move-generation
   (testing "legal-moves generates only legal moves."
     (is (count (legal-moves (new-game))) 9)))
-
-(deftest ai
-  (testing "Newell & Simon's rules."
-    (is (fork? {:board [[:x :e :x] [:o :x :e] [:o :o :e]] :to-move :o}))
-    (is (= [0 1]
-           (find-fork? {:to-move :x, :board [[:x :e :e] [:o :x :e] [:e :e :o]]})))))
