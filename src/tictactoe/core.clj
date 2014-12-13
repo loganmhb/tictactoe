@@ -27,14 +27,14 @@
         "x" :x
         "o" :o))))
 
-(defn print-row
+(defn row->str
   [row]
   (let [r (map contents->str row)]
     (str " " (first r) " | " (second r) " | " (last r) " ")))
 
 (defn print-game
   [game]
-  (let [rows (map print-row (:board game))]
+  (let [rows (map row->str (:board game))]
     (println (first rows))
     (println "-----------")
     (println (second rows))
@@ -44,7 +44,7 @@
 (defn str->move
   "Converts a string of form 'x y' to a vector [x y]."
   [s]
-  (vector (Integer. (str (first s))) (Integer. (str (last s)))))
+  (mapv #(Integer. %) (clojure.string/split s #" ")))
 
 (defn prompt-move
   "Get player move from stdin."

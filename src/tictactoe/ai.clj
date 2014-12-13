@@ -1,5 +1,5 @@
 (ns tictactoe.ai
-  (:require [tictactoe.game :refer [winner make-move legal-moves]]))
+  (:require [tictactoe.game :refer [winner make-move legal-moves switch-player]]))
 
 ;;; Functions for implementing Newell & Simon's rules for perfect play
 
@@ -8,7 +8,7 @@
 ;; at most one way to win or fork. This simplifies the code and does not detract
 ;; from perfect play as long as the rules are applied in the correct order.
 
-(defn win
+(defn winning-move
   "Returns winning move or nil if no move immediately wins."
   [game]
   (first (filter (fn [move]
@@ -16,25 +16,26 @@
                  (legal-moves game))))
 
 (defn null-move
+  "Returns the same game with the other player to move, which is useful
+   for evaluating threats."
   [game]
   {:board (:board game)
-   :to-move (if (= (:to-move game) :x) :o :x)})
+   :to-move (switch-player (:to-move game))})
 
 (defn block-win
   "Returns the move necessary to prevent an opponent win,
    or nil if no immediate block is required."
   [game]
   ;; Uses a null-move idea
-  (win (null-move game)))
+  (winning-move (null-move game)))
 
 (defn fork?
   "Returns true if a position is a fork (the NON-moving player has two
    ways to win)."
   [game]
-  (> (count (filter winner
-                    (map (partial make-move (null-move game))
-                         (legal-moves (null-move game)))))
-     1))
+  (< 1 (count (filter winner
+                      (map (partial make-move (null-move game))
+                           (legal-moves (null-move game)))))))
 
 (defn find-fork
   "Returns a move creating a fork (two chances to win, i.e. guaranteed win
@@ -45,7 +46,9 @@
 (defn threats
   "Finds all threats that will force the opponent to defend."
   [game]
-  (filter (fn [move] (win (null-move (make-move game move))))
+  (filter (fn [move] (-> (make-move game move)
+                         null-move
+                         winning-move))
           (legal-moves game)))
 
 (defn block-fork
@@ -86,7 +89,7 @@
                    (and (corner? [x y])
                         ;; Opponent has moved in opposite corner
                         (= (get-in game (into [:board] (opposite-corner [x y])))
-                           (if (= (:to-move game) :x) :o :x))))
+                           (switch-player (:to-move game)))))
                  (legal-moves game))))
 
 (defn move-corner-or-side
@@ -97,7 +100,8 @@
     (first (legal-moves game))))
 
 (defn best-move
-  "Return the best move the computer can find, using Newell & Simon's rules."
+  "Return the best move the computer can find, using Newell & Simon's rules
+   to guarantee perfect play."
   [game]
   (some #(% game) [win
                    block-win
